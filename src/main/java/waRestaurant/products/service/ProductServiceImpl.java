@@ -72,13 +72,13 @@ public class ProductServiceImpl implements ProductService {
 
   private Optional<ProductEntity> buildProductEntity(ProductInput product) {
     return Optional.of(ProductEntity.builder()
-         .nameProduct(product.getName())
+         .name(product.getName())
         .build());
   }
 
   private Function<ProductEntity, ProductEntity> updateProductValues(ProductInput product) {
     return updateProduct -> updateProduct.toBuilder()
-        .nameProduct(product.getName())
+        .name(product.getName())
         .build();
   }
 }

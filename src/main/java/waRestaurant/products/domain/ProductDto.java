@@ -14,5 +14,5 @@ public class ProductDto {
     
     private CategoryDto category;
     
-    private Integer price;
+    private Double price;
 }

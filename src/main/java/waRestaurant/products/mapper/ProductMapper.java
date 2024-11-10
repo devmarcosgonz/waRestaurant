@@ -10,7 +10,10 @@ public class ProductMapper {
     return productEntity ->  ProductDto.builder()
         .prodcutId(productEntity.getId())
         .nameProducto(productEntity.getNameProduct())
-        .category(productEntity.getCategory())
+        .category(CategoryDto.builder()
+            .categoryId(productEntity.getCategory().getId())
+            .name(productEntity.getCategory().getName())
+            .build())
         .price(productEntity.getPrice())
         .build();
   }
