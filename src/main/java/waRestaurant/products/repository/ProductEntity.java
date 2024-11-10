@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import waRestaurant.category.domain.CategoryDto;
+import waRestaurant.category.repository.CategoryEntity;
 
 @Entity
 @Table(name = "category")
@@ -19,12 +19,12 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_product")
     private Long id;
+    
+    private String name;
 
-    @Column(name = "name_product", length = 20)
-    private String nameProduct;
-
-    @Column(name = "category", length = 20)
-    private CategoryDto category;
+    @ManyToOne
+    @JoinColumn(name = "id_category", nullable = false)
+    private CategoryEntity category;
 
     @Column(name = "price", length = 20)
     private Integer price;
