@@ -19,7 +19,16 @@ public enum ErrorsEnum {
   PRODUCT_NOT_FOUND("EP001", "Error not found product", HttpStatus.NOT_FOUND),
   PRODUCT_SAVE_ERROR("EP002", "Error while saving product", HttpStatus.INTERNAL_SERVER_ERROR),
   PRODUCT_UPDATE_ERROR("EP003", "Error while updating product", HttpStatus.INTERNAL_SERVER_ERROR),
-  PRODUCT_DELETE_ERROR("EP004", "Error while deleting product", HttpStatus.INTERNAL_SERVER_ERROR);
+  PRODUCT_DELETE_ERROR("EP004", "Error while deleting product", HttpStatus.INTERNAL_SERVER_ERROR),
+
+  ORDER_NOT_FOUND("EOR01", "Error not found order", HttpStatus.NOT_FOUND),
+  ORDER_SAVE_ERROR("EOR02", "Error while saving order", HttpStatus.INTERNAL_SERVER_ERROR),
+  ORDER_DELETE_ERROR("EOR03", "Error while deleting order", HttpStatus.INTERNAL_SERVER_ERROR),
+
+  MESA_NOT_FOUND("EME01", "Error not found mesa or is close", HttpStatus.NOT_FOUND),
+  MESA_SAVE_ERROR("EME02", "Error while saving mesa", HttpStatus.INTERNAL_SERVER_ERROR),
+  MESA_EXIST_ERROR("EME02", "Error mesa exist try with another number", HttpStatus.INTERNAL_SERVER_ERROR),
+  MESA_CLOSE_ERROR("EME03", "Error while closing client", HttpStatus.INTERNAL_SERVER_ERROR);
 
   String code;
   String message;

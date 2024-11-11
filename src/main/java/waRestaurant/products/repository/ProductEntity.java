@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import waRestaurant.category.repository.CategoryEntity;
 
 @Entity
-@Table(name = "category")
+@Table(name = "products")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -27,5 +27,5 @@ public class ProductEntity {
     private CategoryEntity category;
 
     @Column(name = "price", length = 20)
-    private Integer price;
+    private Double price;
 }
