@@ -26,8 +26,8 @@ public class ClientServiceImpl implements ClientService {
   private ClientRepository clientRepository;
 
   @Override
-  public List<ClientDto> getAllClients() {
-    return clientRepository.findAll().stream()
+  public List<ClientDto> getAllClients(String name) {
+    return clientRepository.findAllByNameLike(name).stream()
         .map(mapClientEntityToClientDto())
         .toList();
   }

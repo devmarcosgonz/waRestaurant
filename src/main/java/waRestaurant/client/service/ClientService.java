@@ -6,7 +6,7 @@ import waRestaurant.client.domain.ClientDto;
 
 public interface ClientService {
 
-  List<ClientDto> getAllClients();
+  List<ClientDto> getAllClients(String name);
 
   ClientDto getClientById(Long id);
 
