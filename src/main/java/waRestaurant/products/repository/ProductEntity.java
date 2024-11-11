@@ -27,5 +27,5 @@ public class ProductEntity {
     private CategoryEntity category;
 
     @Column(name = "price", length = 20)
-    private Integer price;
+    private Double price;
 }
