@@ -8,10 +8,10 @@ import waRestaurant.category.domain.CategoryDto;
 @Builder(toBuilder = true)
 public class ProductDto {
 
-    private Long prodcutId;
+    private Long productId;
     
-    private String nameProducto;
-    
+    private String productName;
+
     private CategoryDto category;
     
     private Double price;

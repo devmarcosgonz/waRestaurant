@@ -3,18 +3,21 @@ package waRestaurant.products.service;
 import static waRestaurant.commons.CustomException.errorSupplier;
 import static waRestaurant.commons.CustomException.throwError;
 import static waRestaurant.commons.ErrorsEnum.CATEGORY_NOT_FOUND;
-import static waRestaurant.commons.ErrorsEnum.CATEGORY_SAVE_ERROR;
+import static waRestaurant.commons.ErrorsEnum.PRODUCT_NOT_FOUND;
+import static waRestaurant.commons.ErrorsEnum.PRODUCT_SAVE_ERROR;
+import static waRestaurant.products.mapper.ProductMapper.mapProductEntityToProductDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import waRestaurant.category.repository.CategoryEntity;
+import waRestaurant.category.repository.CategoryRepository;
 import waRestaurant.commons.CustomException;
 import waRestaurant.commons.ErrorsEnum;
 import waRestaurant.products.controller.ProductInput;
 import waRestaurant.products.domain.ProductDto;
-import static waRestaurant.products.mapper.ProductMapper.mapProductEntityToProductDto;
 import waRestaurant.products.repository.ProductEntity;
 import waRestaurant.products.repository.ProductRepository;
 
@@ -23,6 +26,9 @@ public class ProductServiceImpl implements ProductService {
 
   @Autowired
   private ProductRepository productRepository;
+
+  @Autowired
+  private CategoryRepository categoryRepository;
 
   @Override
   public List<ProductDto> getAllProducts() {
@@ -35,26 +41,33 @@ public class ProductServiceImpl implements ProductService {
   public ProductDto getProductById(Long id) {
     return productRepository.findById(id)
         .map(mapProductEntityToProductDto())
-        .orElseThrow(errorSupplier(CATEGORY_NOT_FOUND));
+        .orElseThrow(errorSupplier(PRODUCT_NOT_FOUND));
   }
 
   @Override
   @Transactional
   public ProductDto createProduct(ProductInput product) {
-    return buildProductEntity(product)
+    CategoryEntity category = categoryRepository.findById(product.getCategoryId())
+        .orElseThrow(errorSupplier(CATEGORY_NOT_FOUND));
+    return buildProductEntity(product, category)
         .map(productRepository::save)
         .map(mapProductEntityToProductDto())
-        .orElseThrow(errorSupplier(CATEGORY_SAVE_ERROR));
+        .orElseThrow(errorSupplier(PRODUCT_SAVE_ERROR));
   }
 
   @Override
   @Transactional
   public ProductDto updateProduct(Long id, ProductInput product) {
+    CategoryEntity category = null;
+    if (product.getCategoryId() != null) {
+      category = categoryRepository.findById(product.getCategoryId())
+          .orElseThrow(errorSupplier(CATEGORY_NOT_FOUND));
+    }
     return productRepository.findById(id)
-        .map(updateProductValues(product))
+        .map(updateProductValues(product, category))
         .map(productRepository::save)
         .map(mapProductEntityToProductDto())
-        .orElseThrow(errorSupplier(ErrorsEnum.CATEGORY_UPDATE_ERROR));
+        .orElseThrow(errorSupplier(ErrorsEnum.PRODUCT_UPDATE_ERROR));
   }
 
   @Override
@@ -64,21 +77,25 @@ public class ProductServiceImpl implements ProductService {
       productRepository.findById(id)
           .ifPresentOrElse(
               productRepository::delete,
-              () -> { throw new CustomException(CATEGORY_NOT_FOUND); });
+              () -> { throw new CustomException(PRODUCT_NOT_FOUND); });
     } catch (Exception e) {
-      throw throwError(ErrorsEnum.CATEGORY_DELETE_ERROR, "Error while deleting product", e);
+      throw throwError(ErrorsEnum.PRODUCT_DELETE_ERROR, "Error while deleting product", e);
     }
   }
 
-  private Optional<ProductEntity> buildProductEntity(ProductInput product) {
+  private Optional<ProductEntity> buildProductEntity(ProductInput product, CategoryEntity category) {
     return Optional.of(ProductEntity.builder()
-         .name(product.getName())
+        .name(product.getName())
+        .price(product.getPrice())
+        .category(category)
         .build());
   }
 
-  private Function<ProductEntity, ProductEntity> updateProductValues(ProductInput product) {
-    return updateProduct -> updateProduct.toBuilder()
-        .name(product.getName())
+  private Function<ProductEntity, ProductEntity> updateProductValues(ProductInput product, CategoryEntity category) {
+    return productEntity -> productEntity.toBuilder()
+        .name(product.getName() != null ? product.getName() : productEntity.getName())
+        .price(product.getPrice() != null ? product.getPrice() : productEntity.getPrice())
+        .category(category != null ? category : productEntity.getCategory())
         .build();
   }
 }
