@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import waRestaurant.order.service.OrderService;
+import waRestaurant.order.domain.CommandsDto;
 
 @RestController
 @RequestMapping("/order")
@@ -29,9 +30,8 @@ public class OrderController {
 
 
   @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public void addOrder(@RequestBody @Valid OrderInput order) {
-    orderService.addOrder(order);
+  public ResponseEntity<CommandsDto> addOrder(@RequestBody @Valid OrderInput order) {
+    return ResponseEntity.ok(orderService.addOrder(order));
   }
 
   @DeleteMapping("/{id}")
