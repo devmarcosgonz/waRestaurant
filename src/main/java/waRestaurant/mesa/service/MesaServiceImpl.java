@@ -75,7 +75,7 @@ public class MesaServiceImpl implements MesaService {
       if (!exist) {
         mesaRepository.save(MesaEntity.builder()
             .number(mesaNumber)
-            .state(ABIERTO.name())
+            .state(CERRADO.name())
             .build());
       } else {
         throw throwError(MESA_EXIST_ERROR);

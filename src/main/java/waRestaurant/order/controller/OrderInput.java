@@ -12,4 +12,5 @@ public class OrderInput {
   private Long mesaId;
   private Long productId;
   private Integer quantity;
+  private String observation;
 }
