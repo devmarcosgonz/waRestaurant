@@ -20,8 +20,8 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationDto>> getReservations(
             @RequestParam String mesaNumber,
-            @RequestParam LocalDateTime start,
-            @RequestParam LocalDateTime end) {
+            @RequestParam(value = "start", required = false) LocalDateTime start,
+            @RequestParam(value = "end", required = false) LocalDateTime end) {
         return ResponseEntity.ok(reservationService.getReservations(mesaNumber, start, end));
     }
 

@@ -23,7 +23,7 @@ public class ReservationEntity {
     @JoinColumn(name = "id_client")
     private ClientEntity client;
 
-    @Column(nullable = false)
+    @Column(name = "reservation_date")
     private LocalDateTime reservationDate;
 
     @Column(name = "quantity_client")

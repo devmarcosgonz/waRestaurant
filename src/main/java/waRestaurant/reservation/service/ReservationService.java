@@ -2,6 +2,7 @@ package waRestaurant.reservation.service;
 
 import waRestaurant.reservation.controller.ReservationInput;
 import waRestaurant.reservation.domain.ReservationDto;
+import waRestaurant.reservation.repository.ReservationEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;

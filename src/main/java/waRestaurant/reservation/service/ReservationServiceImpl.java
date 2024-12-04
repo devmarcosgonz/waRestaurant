@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import waRestaurant.client.repository.ClientRepository;
+import waRestaurant.mesa.repository.MesaEntity;
 import waRestaurant.mesa.repository.MesaRepository;
 import waRestaurant.reservation.controller.ReservationInput;
 import waRestaurant.reservation.domain.ReservationDto;
