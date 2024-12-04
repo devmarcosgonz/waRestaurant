@@ -3,9 +3,9 @@ spring:
     name: waRestaurant
 
   datasource:
-    url: jdbc:postgresql://localhost:5430/waRestaurant
-    username: BD3_2023
-    password: BD3_2023
+    url: jdbc:postgresql://localhost:5432/waRestaurant
+    username: postgres
+    password: celina
     driver-class-name: org.postgresql.Driver
     hikari:
       minimum-idle: 20
