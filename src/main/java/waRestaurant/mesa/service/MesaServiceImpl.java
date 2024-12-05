@@ -2,10 +2,7 @@ package waRestaurant.mesa.service;
 
 import static waRestaurant.commons.CustomException.errorSupplier;
 import static waRestaurant.commons.CustomException.throwError;
-import static waRestaurant.commons.ErrorsEnum.MESA_EXIST_ERROR;
-import static waRestaurant.commons.ErrorsEnum.MESA_NOT_FOUND;
-import static waRestaurant.commons.ErrorsEnum.MESA_SAVE_ERROR;
-import static waRestaurant.commons.ErrorsEnum.ORDER_SAVE_ERROR;
+import static waRestaurant.commons.ErrorsEnum.*;
 import static waRestaurant.mesa.domain.MesaState.ABIERTO;
 import static waRestaurant.mesa.domain.MesaState.CERRADO;
 import static waRestaurant.mesa.mapper.MesaMapper.mapMesaEntityToMesasDto;
@@ -22,6 +19,8 @@ import waRestaurant.mesa.repository.MesaEntity;
 import waRestaurant.mesa.repository.MesaRepository;
 import waRestaurant.order.domain.OrderDetailsDto;
 import waRestaurant.order.service.OrderService;
+import waRestaurant.reservation.repository.ReservationEntity;
+import waRestaurant.reservation.repository.ReservationRepository;
 
 @Service
 public class MesaServiceImpl implements MesaService {
@@ -31,6 +30,11 @@ public class MesaServiceImpl implements MesaService {
 
   @Autowired
   private OrderService orderService;
+
+  @Autowired
+  private ReservationRepository reservationRepository;
+
+
 
   @Override
   public List<MesasDto> getAllMesas() {
@@ -104,6 +108,8 @@ public class MesaServiceImpl implements MesaService {
   @Override
   public void assignMesa(MesaInput mesaInput) {
     try {
+      reservationRepository.findByMesa(mesaInput.getNumber(), "FINALIZADO")
+              .orElseThrow(errorSupplier(RESERVATION_ERROR));
       MesaEntity mesa = mesaRepository.findByNumberAndState(mesaInput.getNumber(), CERRADO.name())
           .orElseThrow(errorSupplier(MESA_NOT_FOUND));
       orderService.createOrder(mesa.getId(), mesaInput.getClient());

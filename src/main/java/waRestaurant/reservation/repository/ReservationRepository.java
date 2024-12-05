@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long> {
@@ -22,4 +23,13 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
                                                                     @Param("start") LocalDateTime start,
                                                                     @Param("end") LocalDateTime end
     );
+
+    @Query(value = """
+      SELECT r.* 
+      FROM
+        reservations r 
+		JOIN mesas m ON m.id_mesa = r.id_mesa 
+		WHERE m.number_mesa = :mesaNumber AND r.status = :status;
+      """, nativeQuery = true)
+    Optional<ReservationEntity> findByMesa(@Param("mesaNumber") String mesaNumber, @Param("status") String status);
 }

@@ -30,7 +30,8 @@ public enum ErrorsEnum {
   MESA_EXIST_ERROR("EME02", "Error mesa exist try with another number", HttpStatus.INTERNAL_SERVER_ERROR),
   MESA_CLOSE_ERROR("EME03", "Error while closing client", HttpStatus.INTERNAL_SERVER_ERROR),
 
-  RESERVATION_NOT_FOUND("ERR01", "Error while reservation", HttpStatus.INTERNAL_SERVER_ERROR);
+  RESERVATION_NOT_FOUND("ERR01", "Error while reservation", HttpStatus.INTERNAL_SERVER_ERROR),
+  RESERVATION_ERROR("ERR02", "Error la mesa ya se encuentra ocupada", HttpStatus.INTERNAL_SERVER_ERROR);
 
   String code;
   String message;

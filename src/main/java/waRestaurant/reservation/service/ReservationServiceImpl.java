@@ -18,7 +18,9 @@ import java.util.function.Function;
 
 import static waRestaurant.commons.CustomException.errorSupplier;
 import static waRestaurant.commons.CustomException.throwError;
+import static waRestaurant.commons.ErrorsEnum.RESERVATION_ERROR;
 import static waRestaurant.commons.ErrorsEnum.RESERVATION_NOT_FOUND;
+import static waRestaurant.mesa.domain.MesaState.CERRADO;
 import static waRestaurant.reservation.mapper.ReservationMapper.mapReservationEntityToReservationDto;
 
 @Service
@@ -45,10 +47,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public ReservationDto createReservation(ReservationInput reservation) {
 
-        return buildReservationEntity(reservation)
+        return mesaRepository.findByNumberAndState(reservation.getMesaNumber(), CERRADO.name())
+                .map(mesa -> buildReservationEntity(reservation))
                 .map(reservationRepository::save)
                 .map(mapReservationEntityToReservationDto())
-                .orElseThrow();
+                .orElseThrow(errorSupplier(RESERVATION_ERROR));
     }
 
     @Override
@@ -79,13 +82,13 @@ public class ReservationServiceImpl implements ReservationService {
         return null;
     }
 
-    private Optional<ReservationEntity> buildReservationEntity(ReservationInput reservation) {
-        return Optional.of(ReservationEntity.builder()
+    private ReservationEntity buildReservationEntity(ReservationInput reservation) {
+        return ReservationEntity.builder()
         .client(clientRepository.findById(reservation.getClientId()).get())
         .mesa(mesaRepository.findByNumber(reservation.getMesaNumber()).get())
         .reservationDate(reservation.getReservationDate())
         .status("PENDIENTE")
-        .build());
+        .build();
     }
 
     private Function<ReservationEntity, ReservationEntity> updateStatusReservationEntity(String status) {
