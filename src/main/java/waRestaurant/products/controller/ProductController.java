@@ -35,7 +35,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,
-                                                      @RequestBody ProductInput product) {
+            @RequestBody ProductInput product) {
         return ResponseEntity.ok(productService.updateProduct(id, product));
     }
 
@@ -44,5 +44,10 @@ public class ProductController {
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }
-}
 
+    @GetMapping("/products/low-stock")
+    public List<ProductDto> getLowStockProducts() {
+        return productService.getAllProductsWithStockAlert();
+    }
+
+}

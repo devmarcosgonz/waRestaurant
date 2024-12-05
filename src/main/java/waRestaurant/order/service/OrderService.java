@@ -2,6 +2,7 @@ package waRestaurant.order.service;
 
 import waRestaurant.order.controller.OrderInput;
 import waRestaurant.order.domain.OrderDetailsDto;
+import waRestaurant.order.domain.CommandsDto;
 
 public interface OrderService {
 
@@ -11,7 +12,7 @@ public interface OrderService {
 
   void createOrder(Long mesaId, Long clientId);
 
-  void addOrder(OrderInput order);
+  CommandsDto addOrder(OrderInput order);
 
   void updateOrderChangeClient(Long mesaId, Long clientId);
 
