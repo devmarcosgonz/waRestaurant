@@ -28,4 +28,10 @@ public class ProductEntity {
 
     @Column(name = "price", length = 20)
     private Double price;
+    
+    @Column(name = "stock_actual")
+    private Integer stockActual;
+    
+    @Column(name = "stock_minimo")
+    private Integer stockMinimo;
 }
