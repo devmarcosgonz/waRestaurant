@@ -23,6 +23,7 @@ import waRestaurant.order.repository.OrderEntity;
 import waRestaurant.order.repository.OrderRepository;
 import waRestaurant.products.repository.ProductEntity;
 import waRestaurant.products.repository.ProductRepository;
+import waRestaurant.products.service.ProductService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -38,6 +39,9 @@ public class OrderServiceImpl implements OrderService {
 
   @Autowired
   private ClientRepository clientRepository;
+
+  @Autowired
+  private ProductService productService;
 
   @Override
   public boolean existOrderEntity(Long mesaId) {
@@ -72,6 +76,7 @@ public class OrderServiceImpl implements OrderService {
       ProductEntity product = productRepository.findById(order.getProductId())
           .orElseThrow(errorSupplier(PRODUCT_NOT_FOUND));
       OrderDetailsEntity details = repository.save(buildOrderDetails(orderEntity.get(), product, order));
+      productService.updateStock(product.getId(), order.getQuantity());
       return buildCommands(details, order);
     } else {
       throw throwError(ORDER_NOT_FOUND);

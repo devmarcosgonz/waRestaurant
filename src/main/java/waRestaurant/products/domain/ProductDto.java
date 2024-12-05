@@ -15,4 +15,8 @@ public class ProductDto {
     private CategoryDto category;
     
     private Double price;
+    
+    private Integer stockActual;
+    
+    private Integer stockMinimo;
 }

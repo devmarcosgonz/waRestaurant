@@ -17,4 +17,6 @@ public class ProductInput {
   private Double price;
   @NotNull
   private Long categoryId;
+  private Integer stockActual;
+  private Integer stockMinimo;
 }

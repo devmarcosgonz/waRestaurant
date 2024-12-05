@@ -12,6 +12,10 @@ public interface ProductService {
   ProductDto createProduct(ProductInput category);
 
   ProductDto updateProduct(Long id, ProductInput category);
-
+  
   void deleteProduct(Long id);
+  
+  void updateStock(Long productId, Integer quantity);
+  
+  List<ProductDto> getAllProductsWithStockAlert();
 }

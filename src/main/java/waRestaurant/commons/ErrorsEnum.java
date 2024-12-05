@@ -20,6 +20,7 @@ public enum ErrorsEnum {
   PRODUCT_SAVE_ERROR("EP002", "Error while saving product", HttpStatus.INTERNAL_SERVER_ERROR),
   PRODUCT_UPDATE_ERROR("EP003", "Error while updating product", HttpStatus.INTERNAL_SERVER_ERROR),
   PRODUCT_DELETE_ERROR("EP004", "Error while deleting product", HttpStatus.INTERNAL_SERVER_ERROR),
+  PRODUCT_STOCK_ERROR("EP005", "Error stock insuficiente", HttpStatus.INTERNAL_SERVER_ERROR),
 
   ORDER_NOT_FOUND("EOR01", "Error not found order", HttpStatus.NOT_FOUND),
   ORDER_SAVE_ERROR("EOR02", "Error while saving order", HttpStatus.INTERNAL_SERVER_ERROR),
