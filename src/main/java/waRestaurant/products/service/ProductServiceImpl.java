@@ -106,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new CustomException(PRODUCT_NOT_FOUND));
 
         if (product.getStockActual() < quantity) {
-            throw new CustomException(ErrorsEnum.PRODUCT_UPDATE_ERROR);
+            throw new CustomException(ErrorsEnum.PRODUCT_STOCK_ERROR);
         }
 
         product.setStockActual(product.getStockActual() - quantity);
