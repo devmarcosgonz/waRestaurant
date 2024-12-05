@@ -16,6 +16,7 @@ import waRestaurant.client.repository.ClientRepository;
 import waRestaurant.commons.CustomException;
 import waRestaurant.order.controller.OrderInput;
 import waRestaurant.order.domain.OrderDetailsDto;
+import waRestaurant.order.domain.CommandsDto;
 import waRestaurant.order.repository.OrderDetailsEntity;
 import waRestaurant.order.repository.OrderDetailsRepository;
 import waRestaurant.order.repository.OrderEntity;
@@ -69,13 +70,14 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public void addOrder(OrderInput order) {
+  public CommandsDto addOrder(OrderInput order) {
     Optional<OrderEntity> orderEntity = orderRepository.findByMesaIdAndCloseAtIsNull(order.getMesaId());
     if (orderEntity.isPresent()) {
       ProductEntity product = productRepository.findById(order.getProductId())
           .orElseThrow(errorSupplier(PRODUCT_NOT_FOUND));
-      repository.save(buildOrderDetails(orderEntity.get(), product, order));
+      OrderDetailsEntity details = repository.save(buildOrderDetails(orderEntity.get(), product, order));
       productService.updateStock(product.getId(), order.getQuantity());
+      return buildCommands(details, order);
     } else {
       throw throwError(ORDER_NOT_FOUND);
     }
@@ -119,6 +121,16 @@ public class OrderServiceImpl implements OrderService {
         .build();
   }
 
+  private CommandsDto buildCommands(OrderDetailsEntity details, OrderInput orderInput) {
+    return CommandsDto.builder()
+            .title("Instrucciones para la cocina")
+            .mesaId(orderInput.getMesaId())
+            .product(details.getProduct().getName())
+            .quantity(details.getQuantity())
+            .observation(orderInput.getObservation())
+            .build();
+  }
+
   @Override
   public void deleteOrder(Long orderDetail) {
     repository.findById(orderDetail)
@@ -126,4 +138,5 @@ public class OrderServiceImpl implements OrderService {
             repository::delete,
             () -> { throw new CustomException(ORDER_NOT_FOUND); });
   }
+
 }

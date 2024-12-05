@@ -39,7 +39,7 @@ public class MesaServiceImpl implements MesaService {
 
     @Autowired
     private ProductService productService;
-
+    
     @Override
     public List<MesasDto> getAllMesas() {
         return mesaRepository.findAll().stream()
@@ -47,52 +47,51 @@ public class MesaServiceImpl implements MesaService {
                 .toList();
     }
 
-    @Override
-    public MesaDto getMesaById(String number) {
-        MesaEntity mesa = mesaRepository.findByNumber(number)
-                .orElseThrow(errorSupplier(MESA_NOT_FOUND));
-        if (mesa.getState().equals(ABIERTO.name())) {
-            OrderDetailsDto order = orderService.getAllOrdersByMesa(mesa.getId());
-            return buildMesaDto(mesa, order);
-        }
-        return null;
+  @Override
+  public MesaDto getMesaById(String number) {
+    MesaEntity mesa = mesaRepository.findByNumber(number)
+        .orElseThrow(errorSupplier(MESA_NOT_FOUND));
+    if (mesa.getState().equals(ABIERTO.name())) {
+      OrderDetailsDto order = orderService.getAllOrdersByMesa(mesa.getId());
+      return buildMesaDto(mesa, order);
     }
+    return null;
+  }
 
-    private MesaDto buildMesaDto(MesaEntity mesa, OrderDetailsDto order) {
-        return MesaDto.builder()
-                .header(HeaderDto.builder()
-                        .mesaId(mesa.getId())
-                        .total(order.getTotalPrice())
-                        .initAt(order.getInitAt())
-                        .state(mesa.getState())
-                        .clientId(order.getClient().getClientId())
-                        .build())
-                .details(order.getProducts().stream()
-                        .map(products -> DetailsDto.builder()
-                        .productId(products.getProductId())
-                        .quantity(products.getQuantity())
-                        .build())
-                        .toList())
-                .build();
+  private MesaDto buildMesaDto(MesaEntity mesa, OrderDetailsDto order) {
+    return MesaDto.builder()
+        .header(HeaderDto.builder()
+            .mesaId(mesa.getId())
+            .total(order.getTotalPrice())
+            .initAt(order.getInitAt())
+            .state(mesa.getState())
+            .clientId(order.getClient().getClientId())
+            .build())
+        .details(order.getProducts().stream()
+            .map(products -> DetailsDto.builder()
+                .productId(products.getProductId())
+                .quantity(products.getQuantity())
+                .build())
+            .toList())
+        .build();
+  }
+
+  @Override
+  public void createMesa(String mesaNumber) {
+    try {
+      boolean exist = mesaRepository.existsByNumber(mesaNumber);
+      if (!exist) {
+        mesaRepository.save(MesaEntity.builder()
+            .number(mesaNumber)
+            .state(CERRADO.name())
+            .build());
+      } else {
+        throw throwError(MESA_EXIST_ERROR);
+      }
+    } catch (Exception e) {
+      throw throwError(MESA_SAVE_ERROR, "Error saving mesa", e);
     }
-
-    @Override
-    public void createMesa(String mesaNumber) {
-        try {
-            boolean exist = mesaRepository.existsByNumber(mesaNumber);
-            if (!exist) {
-                mesaRepository.save(MesaEntity.builder()
-                        .number(mesaNumber)
-                        .state(ABIERTO.name())
-                        .build());
-            } else {
-                throw throwError(MESA_EXIST_ERROR);
-            }
-        } catch (Exception e) {
-            throw throwError(MESA_SAVE_ERROR, "Error saving mesa", e);
-        }
-
-    }
+  }
 
     @Override
     public void closeMesa(String number) {
