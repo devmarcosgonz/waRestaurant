@@ -2,6 +2,7 @@ package waRestaurant.mesa.service;
 
 import java.util.List;
 import waRestaurant.mesa.controller.MesaInput;
+import waRestaurant.mesa.domain.DetailsDto;
 import waRestaurant.mesa.domain.MesaDto;
 import waRestaurant.mesa.domain.MesasDto;
 
@@ -18,4 +19,6 @@ public interface MesaService {
   void assignMesa(MesaInput mesaInput);
 
   void changeClientMesa(MesaInput mesaInput);
+  
+  void assignConsumptionToMesa(String mesaNumber, List<DetailsDto> details);
 }
